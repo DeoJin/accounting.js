@@ -195,10 +195,16 @@
 
 		 // Build regex to strip out everything except digits, decimal point and minus sign:
 		var regex = new RegExp("[^0-9-" + decimal + "]", ["g"]),
-			unformatted = parseFloat(
-				("" + value)
+			escapedDecimal = decimal.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&'),
+			decimalRegex = new RegExp(escapedDecimal, 'g'),
+			strippedValue = ("" + value)
 				.replace(/\((?=\d+)(.*)\)/, "-$1") // replace bracketed values with negatives
-				.replace(regex, '')         // strip out any cruft
+				.replace(regex, ''),        // strip out any cruft
+			decimalCount = (strippedValue.match(decimalRegex) || []).length,
+			unformatted = parseFloat(
+				(decimalCount > 1 ? strippedValue.replace(decimalRegex, function(match, offset, string) {
+					return offset === string.lastIndexOf(decimal) ? match : '';
+				}) : strippedValue)
 				.replace(decimal, '.')      // make sure decimal point is standard
 			);
 

@@ -176,11 +176,11 @@
 	 *
 	 * Doesn't throw any errors (`NaN`s become 0) but this may change in future
 	 */
-	var unformat = lib.unformat = lib.parse = function(value, decimal) {
+	var unformat = lib.unformat = lib.parse = function(value, decimal, symbol) {
 		// Recursively unformat arrays:
 		if (isArray(value)) {
 			return map(value, function(val) {
-				return unformat(val, decimal);
+				return unformat(val, decimal, symbol);
 			});
 		}
 
@@ -192,12 +192,14 @@
 
 		// Default decimal point comes from settings, but could be set to eg. "," in opts:
 		decimal = decimal || lib.settings.number.decimal;
+		symbol = symbol || lib.settings.currency.symbol;
 
 		 // Build regex to strip out everything except digits, decimal point and minus sign:
 		var regex = new RegExp("[^0-9-" + decimal + "]", ["g"]),
 			unformatted = parseFloat(
 				("" + value)
 				.replace(/\((?=\d+)(.*)\)/, "-$1") // replace bracketed values with negatives
+				.split(symbol).join("")   // remove currency symbols before stripping other chars
 				.replace(regex, '')         // strip out any cruft
 				.replace(decimal, '.')      // make sure decimal point is standard
 			);

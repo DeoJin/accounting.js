@@ -22,6 +22,11 @@ describe('unformat()', function(){
         expect( accounting.unformat(';$@#$%^&123,456\'78', '\'') ).toBe( 123456.78 );
     });
 
+    it('should accept a currency symbol with the decimal separator', function(){
+        expect( accounting.unformat('kr. 123.45', '.', 'kr.') ).toBe( 123.45 );
+        expect( accounting.unformat(['kr. 123.45', 'kr. 67.89'], '.', 'kr.')[1] ).toBe( 67.89 );
+    });
+
     it('should accept an array', function(){
         var vals = accounting.unformat(['$ 123', '$567.89', 'R$12,345,678.901']);
         expect( vals[0] ).toBe( 123 );

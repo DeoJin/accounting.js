@@ -216,9 +216,11 @@
 	var toFixed = lib.toFixed = function(value, precision) {
 		precision = checkPrecision(precision, lib.settings.number.precision);
 
-		var exponentialForm = Number(lib.unformat(value) + 'e' + precision);
-		var rounded = Math.round(exponentialForm);
-		var finalResult = Number(rounded + 'e-' + precision).toFixed(precision);
+		var shiftedExponentials = String(lib.unformat(value)).split('e');
+		var shiftedNumber = Number(shiftedExponentials[0] + 'e' + ((shiftedExponentials[1] ? Number(shiftedExponentials[1]) : 0) + precision));
+		var rounded = Math.round(shiftedNumber);
+		var roundedExponentials = String(rounded).split('e');
+		var finalResult = Number(roundedExponentials[0] + 'e' + ((roundedExponentials[1] ? Number(roundedExponentials[1]) : 0) - precision)).toFixed(precision);
 		return finalResult;
 	};
 

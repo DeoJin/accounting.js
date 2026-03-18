@@ -21,6 +21,14 @@ describe('formatNumber', function(){
 
         });
 
+        it('should handle very small numbers without producing NaN', function(){
+
+            expect( accounting.formatNumber(1e-7, 2) ).toBe( '0.00' );
+            expect( accounting.formatNumber(0.0000001, 6) ).toBe( '0.000000' );
+            expect( accounting.formatNumber(-3e-23, 2) ).toBe( '-0.00' );
+
+        });
+
         it('should work for large numbers', function(){
             
             expect( accounting.formatNumber(123456.54321, 0) ).toBe( '123,457' );

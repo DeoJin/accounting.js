@@ -21,6 +21,14 @@ describe('formatNumber', function(){
 
         });
 
+        it('should handle tiny numbers written in exponential notation', function(){
+
+            expect( accounting.formatNumber(1e-7, 2) ).toBe( '0.00' );
+            expect( accounting.formatNumber(1e-7, 8) ).toBe( '0.00000010' );
+            expect( accounting.formatNumber(-1e-7, 8) ).toBe( '-0.00000010' );
+
+        });
+
         it('should work for large numbers', function(){
             
             expect( accounting.formatNumber(123456.54321, 0) ).toBe( '123,457' );

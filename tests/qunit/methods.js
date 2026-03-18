@@ -10,13 +10,15 @@ $(document).ready(function() {
 
 		accounting.settings.number.decimal = ',';
 		equals(accounting.unformat("100,00"), 100, 'Uses decimal separator from settings');
-		equals(accounting.unformat("¤1.000,00"), 1000, 'Uses decimal separator from settings');
+		equals(accounting.unformat("ï¿½1.000,00"), 1000, 'Uses decimal separator from settings');
 		accounting.settings.number.decimal = '.';
 	});
 
 	test("accounting.toFixed()", function() {
 		equals(accounting.toFixed(54321, 5), "54321.00000", 'Performs basic float zero-padding');
 		equals(accounting.toFixed(0.615, 2), "0.62", 'Rounds 0.615 to "0.62" instead of "0.61"');
+		equals(accounting.toFixed("-0.00000000000000000000003", 2), "0.00", 'Handles tiny negative values without producing NaN');
+		equals(accounting.toFixed("-0.00000000000000000000003", 23), "-0.00000000000000000000003", 'Preserves precision for tiny negative values in exponential form');
 	});
 
 	test("accounting.formatNumber()", function() {
@@ -45,7 +47,7 @@ $(document).ready(function() {
 	test("accounting.formatMoney()", function() {
 		equals(accounting.formatMoney(12345678), "$12,345,678.00", "Default usage with default parameters is ok");
 		equals(accounting.formatMoney(4999.99, "$ ", 2, ".", ","), "$ 4.999,99", 'custom formatting via straight params works ok');
-		equals(accounting.formatMoney(-500000, "£ ", 0), "£ -500,000", 'negative values, custom params, works ok');
+		equals(accounting.formatMoney(-500000, "ï¿½ ", 0), "ï¿½ -500,000", 'negative values, custom params, works ok');
 		equals(accounting.formatMoney(5318008, { symbol: "GBP",  format: "%v %s" }), "5,318,008.00 GBP", "`format` parameter is observed in string output");
 		equals(accounting.formatMoney(1000, { format: "test %v 123 %s test" }), "test 1,000.00 123 $ test", "`format` parameter is observed in string output, despite being rather strange");
 		
